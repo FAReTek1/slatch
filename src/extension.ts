@@ -109,5 +109,5 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand("slatch.Tree.selectNode", (arg: TreeItem) => {arg.onClick();});
 
-	vscode.window.registerTreeDataProvider('exampleView', new TreeDataProvider());
+	vscode.window.registerTreeDataProvider('slatch.commandView', new TreeDataProvider());
 }

@@ -12,11 +12,21 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "views": {
-      "explorer": [
+    "viewsContainers": {
+      "activitybar": [
         {
-          "id": "exampleView",
-          "name": "exampleView"
+          "title": "Slatch",
+          "id": "slatch_viewContainer",
+          "icon": "media/wobo.svg"
+        }
+      ]
+    },
+
+    "views": {
+      "slatch_viewContainer": [
+        {
+          "id": "slatch.commandView",
+          "name": "Commands"
         }
       ]
     },
