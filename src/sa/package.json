@@ -1,0 +1,13 @@
+{
+  "name": "@faretek1/sa",
+  "version": "1.0.0",
+  "description": "This is an unofficial typescript clone of [scratchattach](https://github.com/TimMcCool/scratchattach). It is WIP!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
