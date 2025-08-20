@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as sa from "./sa/src/index";
 
 class TreeItem extends vscode.TreeItem {
 	children: TreeItem[] | undefined;
