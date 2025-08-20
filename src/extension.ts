@@ -2,8 +2,21 @@ import * as vscode from 'vscode';
 
 class TreeItem extends vscode.TreeItem {
 	children: TreeItem[] | undefined;
+	parent?: TreeItem;
+	opcode?: string;
 
-	constructor(label: string, children?: TreeItem[]) {
+	constructor(label: string, children_or_opcode?: TreeItem[] | string) {
+		let children: TreeItem[] | undefined; 
+		let opcode: string | undefined;
+
+		if (children_or_opcode instanceof Array) {
+			children = children_or_opcode;
+			opcode = undefined;
+		} else {
+			children = undefined;
+			opcode = children_or_opcode;
+		}
+
 		// if you add ' ---v' to the end of the label, it will be expanded by default. This will be trimmed from the label in all cases
 		// The arrow will have no effect if there are no children anyway
 		const arrow = " ---v";
@@ -16,12 +29,48 @@ class TreeItem extends vscode.TreeItem {
 		let cstate = vscode.TreeItemCollapsibleState.None;
 		if (children !== undefined) {
 			cstate = expanded? vscode.TreeItemCollapsibleState.Expanded : 
-							    vscode.TreeItemCollapsibleState.Collapsed;
+							   vscode.TreeItemCollapsibleState.Collapsed;
 		}
 
 		super(label, cstate);
 
+		////////////////////////////////////////
+
+		children?.forEach((child) => {
+			child.parent = this;
+		});
+
+		////////////////////////////////////////
 		this.children = children;
+		this.opcode = opcode; 
+		this.parent = undefined; // This is set by parent nodes, when they are initialised
+
+		////////////////////////////////////////
+		// registers a hidden command to run when this node is clicked. This command calls this.onClick()
+		this.command = {
+			command: "slatch.Tree.selectNode",
+			title: "Select node",
+			arguments: [this]
+		};
+	}
+
+	getXpath() {
+		// Go through parents until u get a toplevel node. Give the path as an array
+		const path = [];
+		let node: TreeItem = this;
+
+		while (node.parent !== undefined) {
+			path.push(node.label);
+			node = node.parent;
+		}
+		path.push(node.label);
+
+		return path.reverse();
+	}
+
+	onClick() {
+		console.log(`Slatch.TreeItem: selected ${this.label}, path=${this.getXpath().join('/')}`);
+		console.log(`You just ran ${this.opcode}`);
 	}
 }
 
@@ -32,7 +81,6 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 	constructor() {
 		this.data = [
-			
 			new TreeItem('cars ---v', [
 				new TreeItem('Ford ---v', [
 					new TreeItem('Fiesta'), 
@@ -59,5 +107,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+	vscode.commands.registerCommand("slatch.Tree.selectNode", (arg: TreeItem) => {arg.onClick();});
+
 	vscode.window.registerTreeDataProvider('exampleView', new TreeDataProvider());
 }

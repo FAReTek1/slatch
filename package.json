@@ -12,15 +12,29 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-        "views": {
-            "explorer": [
-                {
-                    "id": "exampleView",
-                    "name": "exampleView"
-                }
-            ]
+    "views": {
+      "explorer": [
+        {
+          "id": "exampleView",
+          "name": "exampleView"
         }
+      ]
     },
+    "commands": [
+      {
+        "command": "slatch.Tree.select",
+        "title": "Slatch: select a tree node (INTERNAL)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "slatch.Tree.select",
+          "when": "false"
+        }
+      ]
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
