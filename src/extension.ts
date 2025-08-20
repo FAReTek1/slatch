@@ -6,7 +6,7 @@ class TreeItem extends vscode.TreeItem {
 	opcode?: string;
 
 	constructor(label: string, children_or_opcode?: TreeItem[] | string) {
-		let children: TreeItem[] | undefined; 
+		let children: TreeItem[] | undefined;
 		let opcode: string | undefined;
 
 		if (children_or_opcode instanceof Array) {
@@ -28,8 +28,8 @@ class TreeItem extends vscode.TreeItem {
 
 		let cstate = vscode.TreeItemCollapsibleState.None;
 		if (children !== undefined) {
-			cstate = expanded? vscode.TreeItemCollapsibleState.Expanded : 
-							   vscode.TreeItemCollapsibleState.Collapsed;
+			cstate = expanded ? vscode.TreeItemCollapsibleState.Expanded :
+				vscode.TreeItemCollapsibleState.Collapsed;
 		}
 
 		super(label, cstate);
@@ -42,7 +42,7 @@ class TreeItem extends vscode.TreeItem {
 
 		////////////////////////////////////////
 		this.children = children;
-		this.opcode = opcode; 
+		this.opcode = opcode;
 		this.parent = undefined; // This is set by parent nodes, when they are initialised
 
 		////////////////////////////////////////
@@ -83,15 +83,18 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 		this.data = [
 			new TreeItem('cars ---v', [
 				new TreeItem('Ford ---v', [
-					new TreeItem('Fiesta'), 
-					new TreeItem('Focus'), 
+					new TreeItem('Fiesta'),
+					new TreeItem('Focus'),
 					new TreeItem('Mustang'),
-					new TreeItem('Hello james ---v')]),
-			new TreeItem('BMW', [
-				new TreeItem('320'), 
-				new TreeItem('X3'), 
-				new TreeItem('X5')])
-		])];
+					new TreeItem('Hello james ---v')
+				]),
+				new TreeItem('BMW', [
+					new TreeItem('320'),
+					new TreeItem('X3'),
+					new TreeItem('X5')
+				])
+			])
+		];
 	}
 
 	getTreeItem(element: TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -107,7 +110,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	vscode.commands.registerCommand("slatch.Tree.selectNode", (arg: TreeItem) => {arg.onClick();});
+	vscode.commands.registerCommand("slatch.Tree.selectNode", (arg: TreeItem) => { arg.onClick(); });
 
 	vscode.window.registerTreeDataProvider('slatch.commandView', new TreeDataProvider());
 }
