@@ -5,3 +5,5 @@ This is an unofficial async typescript clone of [scratchattach](https://github.c
 scratchattach is a Scratch API wrapper with support for almost all site features
 
 [scratchattach pkg tree](https://github.com/TimMcCool/scratchattach/tree/main/scratchattach)
+
+Note it is only loosely based on it, and will probably not provide so many abstractions

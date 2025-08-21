@@ -36,6 +36,7 @@ export class Session extends base.BaseSiteComponent{
         }
 
         super()
+        this.session = this;
 
         this.id = params.id;
 
