@@ -1,5 +1,5 @@
 import * as sa from '../../src/index';
-import $ from 'jquery';
+import * as https from 'https';
 
 const username = process.env["SA_TEST_USERNAME"];
 const password = process.env["SA_TEST_PASSWORD"];
@@ -14,7 +14,25 @@ if (password === undefined) {
 if (sessId === undefined) {
     throw new Error(`sessId must be set`);
 }
+//
+// const session = sa.login(username, password);
+//
+// console.log(session.toString());
 
-const session = sa.login_by_id(sessId);
+let body = '';
+const req = https.request(
+    'https://scratch.mit.edu', {
+        method: 'GET',
+    }, resp => {
+        resp.on('data', (chunk) => {
+            body += chunk.toString();
+        });
 
-console.log(session.toString());
+        resp.on('end', () => {
+            console.log(body);
+        })
+    }
+)
+req.on('error', e => {
+})
+req.end()

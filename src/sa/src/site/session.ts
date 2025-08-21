@@ -2,6 +2,8 @@ import * as commons from '../utils/commons'
 import * as base from './base'
 
 import * as zlib from 'zlib';
+import * as https from 'https';
+
 
 
 /**
@@ -119,4 +121,50 @@ export function login_by_id(session_id: string, username?: string, password?: st
     }
 
     return _session;
+}
+
+/**
+ * Creates a session / log in to the Scratch website with the specified username and password.
+ * This method ...
+ * 1. creates a session id by posting a login request to Scratch's login API. (If this fails, scratchattach.exceptions.LoginFailure is raised)
+ * 2. fetches the xtoken and other information by posting a request to scratch.mit.edu/session. (If this fails, a warning is displayed)
+ *
+ * @param username
+ * @param password
+ * @param timeout Timeout for the request to Scratch's login API (in seconds). Defaults to 10.
+ * @return An object that represents the created login / session
+ */
+export function login(username: string, password: string, timeout=10): Session {
+    // issue_login_warning()
+    const body = JSON.stringify({
+        username: username, password:password
+    });
+    const _headers: Record<string, string | number> = {...commons.headers,
+        Cookie: 'scratchcsrftoken=a;scratchlanguage=en;',
+        'Content-Length': Buffer.byteLength(body)
+    };
+
+    console.log(_headers);
+
+    const options: https.RequestOptions = {
+        port: 443,
+        method: 'POST',
+        headers: _headers,
+        timeout: timeout,
+    };
+
+    const req = https
+        .request(
+            'https://scratch.mit.edu/login/', options, function (resp) {
+                console.log('Resp received');
+                console.log(resp.statusCode);
+            }
+        );
+    req.write(body);
+
+    req.end();
+
+    while (true) {
+
+    }
 }
