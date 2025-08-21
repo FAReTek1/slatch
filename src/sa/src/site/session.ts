@@ -78,6 +78,10 @@ export class Session extends base.BaseSiteComponent{
     get username() {
         return this.user.name;
     }
+
+    override getThumbnailUrl(_dims?: string): string {
+        return this.user.getThumbnailUrl(_dims);
+    }
 }
 
 /**

@@ -15,4 +15,8 @@ export class User extends base.BaseSiteComponent {
         this.id = params.id;
         this.name = params.name;
     }
+
+    override getThumbnailUrl(dims: string='60x60'): string {
+        return `https://uploads.scratch.mit.edu/get_image/user/${this.id}_${dims}.png`;
+    }
 }

@@ -11,4 +11,8 @@ export class BaseSiteComponent {
             this.session = params.session;
         }
     }
+
+    getThumbnailUrl(_dims: string=''): string {
+        return 'https://cdn.scratch.mit.edu/scratchr2/static/__3e14301069f00819d1c44531f23cc811__//treejs/img/private_cat.png';
+    }
 }

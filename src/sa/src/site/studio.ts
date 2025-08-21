@@ -25,4 +25,9 @@ export class Studio extends base.BaseSiteComponent {
             session: _session
         });
     }
+
+    override getThumbnailUrl(dims: string='170x100'): string {
+        // return `https://uploads.scratch.mit.edu/galleries/thumbnails/${this.id}.png`;
+        return `https://uploads.scratch.mit.edu/get_image/gallery/${this.id}_${dims}.png`;
+    }
 }

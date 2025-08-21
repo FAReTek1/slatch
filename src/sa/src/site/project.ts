@@ -39,6 +39,10 @@ export class PartialProject extends base.BaseSiteComponent {
         return `https://scratch.mit.edu/projects/${this.id}/`;
     }
 
+    override getThumbnailUrl(dims: string='144x108'): string {
+        // return `https://uploads.scratch.mit.edu/projects/thumbnails/${this.id}.png`;
+        return `https://uploads.scratch.mit.edu/get_image/project/${this.id}_${dims}.png`
+    }
 }
 
 /**
