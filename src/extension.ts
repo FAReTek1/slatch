@@ -4,18 +4,18 @@ import * as sa from "./sa/src/index";
 class TreeItem extends vscode.TreeItem {
 	children: TreeItem[] | undefined;
 	parent?: TreeItem;
-	opcode?: string;
+	operation?: (ti: TreeItem) => void;
 
-	constructor(label: string, children_or_opcode?: TreeItem[] | string) {
+	constructor(label: string, children_or_operation?: TreeItem[] | ((ti: TreeItem) => void)) {
 		let children: TreeItem[] | undefined;
-		let opcode: string | undefined;
+		let operation: ((ti: TreeItem) => void) | undefined;
 
-		if (children_or_opcode instanceof Array) {
-			children = children_or_opcode;
-			opcode = undefined;
+		if (children_or_operation instanceof Array) {
+			children = children_or_operation;
+			operation = undefined;
 		} else {
 			children = undefined;
-			opcode = children_or_opcode;
+			operation = children_or_operation;
 		}
 
 		// if you add ' ---v' to the end of the label, it will be expanded by default. This will be trimmed from the label in all cases
@@ -43,7 +43,7 @@ class TreeItem extends vscode.TreeItem {
 
 		////////////////////////////////////////
 		this.children = children;
-		this.opcode = opcode;
+		this.operation = operation;
 		this.parent = undefined; // This is set by parent nodes, when they are initialised
 
 		////////////////////////////////////////
@@ -74,8 +74,8 @@ class TreeItem extends vscode.TreeItem {
 	}
 
 	onClick() {
-		console.log(`Slatch.TreeItem: selected ${this.label}, path=${this.xpath}`);
-		console.log(`You just ran ${this.opcode}`);
+		// console.log(`Slatch.TreeItem: selected ${this.label}, path=${this.xpath}`);
+		this.operation && this.operation(this);
 	}
 }
 
@@ -87,7 +87,9 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 	constructor() {
 		this.data = [
 			new TreeItem('Home ---v', [
-				new TreeItem('Feed'),
+				new TreeItem('Feed', (ti) => {
+					console.log('Loading feed...', ti.label);
+				}),
 				new TreeItem('Featured Projects'),
 				new TreeItem('Featured Studios'),
 				new TreeItem('Turbowarp Featured Projects'),
