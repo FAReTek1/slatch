@@ -179,7 +179,8 @@ export function login(params: {
 
             const sid = new RegExp('"(.*)"').exec(sc.toString());
             if (sid === null) {
-                throw new Error('Did not receive SessID. Maybe a wrong username or password?');
+                throw new Error('Did not receive SessID. Maybe a wrong username or password? Or possibly too ' +
+                    'many incorrect login attempts means you need to login manually online?');
             }
 
             // There is actually no new data to be retrieved from the response JSON here. We only need headers.
