@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
-import * as sa from "./sa/src/index";
+import * as sa from './sa/src/index';
+import {generateBscHTML} from './baseSiteComponentView';
+
+import jsdom from 'jsdom';
 
 class TreeItem extends vscode.TreeItem {
 	children: TreeItem[] | undefined;
@@ -84,11 +87,58 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 	data: TreeItem[];
 
-	constructor() {
+	constructor(context: vscode.ExtensionContext) {
 		this.data = [
 			new TreeItem('Home ---v', [
 				new TreeItem('Feed', (ti) => {
-					console.log('Loading feed...', ti.label);
+					vscode.window.showInformationMessage('Loading feed...');
+
+					const panel = vscode.window.createWebviewPanel(
+						'slatchFeed',
+						'Slatch: Feed',
+						vscode.ViewColumn.One,
+						{}
+					);
+					panel.webview.html = `
+						<!DOCTYPE html>
+						<h1>Featured projects</h1>
+						<div id="community_featured_projects"></div>
+						<h1>Featured studios</h1>
+						<div id="community_featured_studios"></div>
+						<h1>Scratch design studio</h1>
+						<div id="scratch_design_studio"></div>
+						<h1>Curated projects</h1>
+						<div id="curator_top_projects"></div>
+						<h1>Top loved</h1>
+						<div id="community_most_loved_projects"></div>
+						<h1>Top remixed</h1>
+						<div id="community_most_remixed_projects"></div>
+						<h1>New</h1>
+						<div id="community_newest_projects"></div>
+					`;
+
+					sa.featured((data) => {
+						const dom = new jsdom.JSDOM(panel.webview.html); 
+
+						function gendom(id: string) {
+							const div = dom.window.document.querySelector(`div[id=${id}]`);
+							if (div) {
+								div.innerHTML = generateBscHTML(Object(data)[id], 'width="120" height="90"');
+							}
+						}
+
+						gendom('community_newest_projects');
+						gendom('community_most_remixed_projects');
+						gendom('scratch_design_studio');
+						gendom('curator_top_projects');
+						gendom('community_most_loved_projects');
+						gendom('community_featured_projects');
+						gendom('community_featured_studios');
+
+						panel.webview.html = dom.serialize();
+					});
+
+					
 				}),
 				new TreeItem('Featured Projects'),
 				new TreeItem('Featured Studios'),
@@ -116,5 +166,5 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand("slatch.Tree.selectNode", (arg: TreeItem) => { arg.onClick(); });
 
-	vscode.window.registerTreeDataProvider('slatch.commandView', new TreeDataProvider());
+	vscode.window.registerTreeDataProvider('slatch.commandView', new TreeDataProvider(context));
 }
