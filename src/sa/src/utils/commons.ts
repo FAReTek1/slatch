@@ -8,7 +8,7 @@ export function assert_eq(expr: any, expected: any, msg?: string) {
     assert(expr == expected, `${msg}Got ${expr}, expected ${expected}`);
 }
 
-export const headers: object = {
+export const headers: Record<string, string> = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, " +
         "like Gecko) Chrome/75.0.3770.142 Safari/537.36",
     "x-csrftoken": "a",

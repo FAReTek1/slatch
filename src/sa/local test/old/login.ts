@@ -1,4 +1,4 @@
-import * as sa from '../../src/index';
+import * as sa from '../../src';
 
 const username = process.env["SA_TEST_USERNAME"];
 const password = process.env["SA_TEST_PASSWORD"];
