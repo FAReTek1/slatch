@@ -16,8 +16,8 @@ export class Studio extends base.BaseSiteComponent {
     }
 
     static fromJSON(json: Record<string, string | number>, _session?: session.Session): Studio {
-        if (typeof json.id != 'number') {throw new Error(`Bad json ${json.id}`)}
-        if (typeof json.title != 'string') {throw new Error(`Bad json ${json.title}`)}
+        if (typeof json.id !== 'number') {throw new Error(`Bad json ${json.id}`)}
+        if (typeof json.title !== 'string') {throw new Error(`Bad json ${json.title}`)}
 
         return new Studio({
             id: json.id,
@@ -29,5 +29,9 @@ export class Studio extends base.BaseSiteComponent {
     override getThumbnailUrl(dims: string='170x100'): string {
         // return `https://uploads.scratch.mit.edu/galleries/thumbnails/${this.id}.png`;
         return `https://uploads.scratch.mit.edu/get_image/gallery/${this.id}_${dims}.png`;
+    }
+
+    get url() {
+        return `https://scratch.mit.edu/studios/${this.id}/`;
     }
 }

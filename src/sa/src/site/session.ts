@@ -1,6 +1,6 @@
-import * as commons from '../utils/commons'
-import * as base from './base'
-import * as user from './user'
+import * as commons from '../utils/commons';
+import * as base from './base';
+import * as user from './user';
 
 import * as zlib from 'zlib';
 import * as https from 'https';

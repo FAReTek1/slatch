@@ -1,8 +1,17 @@
 import * as vscode from 'vscode';
 import * as sa from './sa/src/index';
+import * as fs from 'fs';
 import {generateBscHTML} from './baseSiteComponentView';
 
 import jsdom from 'jsdom';
+
+function getSiteFileName(name: string) {
+	return `${__dirname}/../site/${name}`;
+}
+
+function getSiteFile(name: string) {
+	return fs.readFileSync(getSiteFileName(name), 'utf-8');
+}
 
 class TreeItem extends vscode.TreeItem {
 	children: TreeItem[] | undefined;
@@ -99,23 +108,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 						vscode.ViewColumn.One,
 						{}
 					);
-					panel.webview.html = `
-						<!DOCTYPE html>
-						<h1>Featured projects</h1>
-						<div id="community_featured_projects"></div>
-						<h1>Featured studios</h1>
-						<div id="community_featured_studios"></div>
-						<h1>Scratch design studio</h1>
-						<div id="scratch_design_studio"></div>
-						<h1>Curated projects</h1>
-						<div id="curator_top_projects"></div>
-						<h1>Top loved</h1>
-						<div id="community_most_loved_projects"></div>
-						<h1>Top remixed</h1>
-						<div id="community_most_remixed_projects"></div>
-						<h1>New</h1>
-						<div id="community_newest_projects"></div>
-					`;
+					panel.webview.html = getSiteFile('feed.html');
 
 					sa.featured((data) => {
 						const dom = new jsdom.JSDOM(panel.webview.html); 
@@ -123,7 +116,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 						function gendom(id: string) {
 							const div = dom.window.document.querySelector(`div[id=${id}]`);
 							if (div) {
-								div.innerHTML = generateBscHTML(Object(data)[id], 'width="120" height="90"');
+								div.innerHTML = generateBscHTML(Object(data)[id], '120', 'height="90"');
 							}
 						}
 
