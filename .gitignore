@@ -3,4 +3,4 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-src/sa/.idea/sa.iml
+src/sa/.idea/
