@@ -55,7 +55,7 @@ class TreeItem extends vscode.TreeItem {
 		};
 	}
 
-	getXpath() {
+	get xpath_arr() {
 		// Go through parents until u get a toplevel node. Give the path as an array
 		const path = [];
 		let node: TreeItem = this;
@@ -69,8 +69,12 @@ class TreeItem extends vscode.TreeItem {
 		return path.reverse();
 	}
 
+	get xpath() {
+		return this.xpath_arr.join('/');
+	}
+
 	onClick() {
-		console.log(`Slatch.TreeItem: selected ${this.label}, path=${this.getXpath().join('/')}`);
+		console.log(`Slatch.TreeItem: selected ${this.label}, path=${this.xpath}`);
 		console.log(`You just ran ${this.opcode}`);
 	}
 }
@@ -82,18 +86,15 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 	constructor() {
 		this.data = [
-			new TreeItem('cars ---v', [
-				new TreeItem('Ford ---v', [
-					new TreeItem('Fiesta'),
-					new TreeItem('Focus'),
-					new TreeItem('Mustang'),
-					new TreeItem('Hello james ---v')
-				]),
-				new TreeItem('BMW', [
-					new TreeItem('320'),
-					new TreeItem('X3'),
-					new TreeItem('X5')
-				])
+			new TreeItem('Home ---v', [
+				new TreeItem('Feed'),
+				new TreeItem('Featured Projects'),
+				new TreeItem('Featured Studios'),
+				new TreeItem('Turbowarp Featured Projects'),
+				new TreeItem('Scratch Design Studio'),
+				new TreeItem('Projects Loved by Scratchers I\'m Following'),
+				new TreeItem('Top Remixed'),
+				new TreeItem('Top Loved'),
 			])
 		];
 	}
