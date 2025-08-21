@@ -1,5 +1,6 @@
 import * as commons from '../utils/commons'
 import * as base from './base'
+import * as user from './user'
 
 import * as zlib from 'zlib';
 import * as https from 'https';
@@ -12,9 +13,11 @@ import * as https from 'https';
 export class Session extends base.BaseSiteComponent{
     id: string = '';
 
-    username: string;
     password: string;
     xtoken?: string;
+    login_ip?: string;
+    user: user.User;
+    login_date: Date;
 
     _headers: object;
     _cookies: object;
@@ -36,7 +39,9 @@ export class Session extends base.BaseSiteComponent{
 
         this.id = params.id;
 
-        this.username = params.username;
+        this.user = new user.User({
+            name: params.username
+        });
         this.password = params.password;
         this.xtoken = params.xtoken;
 
@@ -54,14 +59,21 @@ export class Session extends base.BaseSiteComponent{
     }
 
     private process_session_id() {
-        console.log("Process session ID");
+        let [data, date] = decode_session_id(this.id);
 
-        let data = decode_session_id(this.id);
-        console.log(data);
+        this.user.name = data.username;
+        this.user.id = data._auth_user_id;
+        this.xtoken = data.token;
+        this.login_ip = data['login-ip'];
+        this.login_date = date;
     }
 
     toString() {
         return '<' + `Login for ${this.username}>`;
+    }
+
+    get username() {
+        return this.user.name;
     }
 }
 
@@ -86,7 +98,7 @@ export class Session extends base.BaseSiteComponent{
  * - _auth_user_hash
  * @param session_id
  */
-export function decode_session_id(session_id: string) {
+export function decode_session_id(session_id: string): [Record<string, string>, Date] {
     const [p1, p2] = session_id.split(':');
 
     return [
@@ -129,42 +141,76 @@ export function login_by_id(session_id: string, username?: string, password?: st
  * 1. creates a session id by posting a login request to Scratch's login API. (If this fails, scratchattach.exceptions.LoginFailure is raised)
  * 2. fetches the xtoken and other information by posting a request to scratch.mit.edu/session. (If this fails, a warning is displayed)
  *
- * @param username
- * @param password
- * @param timeout Timeout for the request to Scratch's login API (in seconds). Defaults to 10.
+ * @param params contains kwargs
+ * Timeout for the request to Scratch's login API (in seconds). Defaults to 10.
+ * @param callback
  * @return An object that represents the created login / session
  */
-export function login(username: string, password: string, timeout=10): Session {
+export function login(params: {
+    username: string;
+    password: string;
+    timeout?: number;
+}, callback?: (session: Session) => void) {
+    if (params.timeout === undefined) {
+        params.timeout = 10;
+    }
+
     // issue_login_warning()
     const body = JSON.stringify({
-        username: username, password:password
+        username: params.username, password:params.password
     });
+
     const _headers: Record<string, string | number> = {...commons.headers,
         Cookie: 'scratchcsrftoken=a;scratchlanguage=en;',
-        'Content-Length': Buffer.byteLength(body)
     };
 
-    console.log(_headers);
+    const req = https.request(
+        'https://scratch.mit.edu/login/', {
+            method: 'POST',
+            headers: _headers,
+            timeout: params.timeout,
+        }, resp => {
+            const sc = resp.headers['set-cookie'];
 
-    const options: https.RequestOptions = {
-        port: 443,
-        method: 'POST',
-        headers: _headers,
-        timeout: timeout,
-    };
-
-    const req = https
-        .request(
-            'https://scratch.mit.edu/login/', options, function (resp) {
-                console.log('Resp received');
-                console.log(resp.statusCode);
+            if (sc === undefined) {
+                throw new Error('Did not receive set-cookie');
             }
-        );
+
+            const sid = new RegExp('"(.*)"').exec(sc.toString());
+            if (sid === null) {
+                console.warn('Did not receive SessID. Maybe you had a wrong username or password?');
+            }
+
+            let body = '';
+
+            resp.on('data', (chunk) => {
+                body += chunk.toString();
+            })
+
+            resp.on('end', () => {
+                let data: Record<string, string | number | string[] | null> = JSON.parse(body)[0];
+
+                if (data.success == 0) {
+                    throw new Error(`Unsuccesful login #${data.num_tries}: ${data.msg}`);
+                }
+
+                if (sid === null) {
+                    throw new Error('No SessID');
+                }
+
+                // There is actually no new data to be retrieved from the response JSON here, other than validation of
+                // the username and password, so we can just pass the sessid to login_by_id
+                // Possibly, we can even remove a listener for the response and use the sessionID immediately
+                // But this does not provide such a secure validation
+                const sess = login_by_id(sid[0], params.username, params.password);
+
+                if (callback !== undefined) {
+                    callback(sess);
+                }
+            });
+        }
+    );
+
     req.write(body);
-
     req.end();
-
-    while (true) {
-
-    }
 }
