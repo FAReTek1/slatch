@@ -1,11 +1,16 @@
+import * as fs from 'fs';
 import * as sa from "./sa/src/index";
 
+export function getSiteFileName(name: string="") {
+    return `${__dirname}/../site/${name}`;
+}
+
+export function getSiteFile(name: string) {
+    return fs.readFileSync(getSiteFileName(name), 'utf-8');
+}
+
 export function generateBscHTML(bscs: sa.BaseSiteComponent[], width: string="120", attrs: string='') {
-    let ret = `<div class="BSCView" style="
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-            ">`;
+    let ret = `<div class="bsc-view">`;
 
     bscs.forEach((bsc) => {
         if (bsc instanceof sa.Project) {

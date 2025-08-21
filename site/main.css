@@ -1,0 +1,14 @@
+.bsc-view {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.ps-thumb {
+    width: 120;
+    height: 90;
+}
+.ps-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 120px;
+}

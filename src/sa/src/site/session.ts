@@ -5,8 +5,6 @@ import * as user from './user';
 import * as zlib from 'zlib';
 import * as https from 'https';
 
-
-
 /**
  * Represents a Scratch log in / session. Stores authentication data (session id and xtoken).
  */

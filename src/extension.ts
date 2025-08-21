@@ -1,17 +1,11 @@
 import * as vscode from 'vscode';
 import * as sa from './sa/src/index';
-import * as fs from 'fs';
-import {generateBscHTML} from './baseSiteComponentView';
+import * as bcv from './baseSiteComponentView';
 
 import jsdom from 'jsdom';
+import path from 'path';
 
-function getSiteFileName(name: string) {
-	return `${__dirname}/../site/${name}`;
-}
 
-function getSiteFile(name: string) {
-	return fs.readFileSync(getSiteFileName(name), 'utf-8');
-}
 
 class TreeItem extends vscode.TreeItem {
 	children: TreeItem[] | undefined;
@@ -108,15 +102,27 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 						vscode.ViewColumn.One,
 						{}
 					);
-					panel.webview.html = getSiteFile('feed.html');
+					panel.webview.html = bcv.getSiteFile('feed.html');
+					let dom = new jsdom.JSDOM(panel.webview.html);
+					dom.window.document.querySelectorAll('.preprocess-include').forEach((elem) => {
+							console.log("yess");
+							const src = elem.getAttribute('src');
+							if (src) {
+								elem.textContent = bcv.getSiteFile(src);
+							}
+						});
+					
+					panel.webview.html = dom.serialize();
+
+					console.log(panel.webview.html);
 
 					sa.featured((data) => {
-						const dom = new jsdom.JSDOM(panel.webview.html); 
+						dom = new jsdom.JSDOM(panel.webview.html);						
 
 						function gendom(id: string) {
 							const div = dom.window.document.querySelector(`div[id=${id}]`);
 							if (div) {
-								div.innerHTML = generateBscHTML(Object(data)[id], '120', 'height="90"');
+								div.innerHTML = bcv.generateBscHTML(Object(data)[id], '120', 'height="90"');
 							}
 						}
 
@@ -129,9 +135,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 						gendom('community_featured_studios');
 
 						panel.webview.html = dom.serialize();
-					});
-
-					
+					});					
 				}),
 				new TreeItem('Featured Projects'),
 				new TreeItem('Featured Studios'),
