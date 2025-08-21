@@ -55,6 +55,7 @@ export class Session extends base.BaseSiteComponent{
             "Content-Type": "application/json"
         };
 
+        this.login_date = new Date(); // Defined in below func call
         this.process_session_id();
     }
 
@@ -117,11 +118,11 @@ export function decode_session_id(session_id: string): [Record<string, string>, 
 export function login_by_id(session_id: string, username?: string, password?: string, xtoken?: string): Session {
     // issue_login_warning()
 
-    let session_string: string | undefined = undefined;
-    if (password !== undefined) {
-        // session_data = dict(id=session_id, username=username, password=password)
-        // session_string = base64.b64encode(json.dumps(session_data).encode()).decode()
-    }
+    // let session_string: string | undefined = undefined;
+    // if (password !== undefined) {
+    //     // session_data = dict(id=session_id, username=username, password=password)
+    //     // session_string = base64.b64encode(json.dumps(session_data).encode()).decode()
+    // }
 
     const _session = new Session({
         id: session_id,
@@ -178,36 +179,13 @@ export function login(params: {
 
             const sid = new RegExp('"(.*)"').exec(sc.toString());
             if (sid === null) {
-                console.warn('Did not receive SessID. Maybe you had a wrong username or password?');
+                throw new Error('Did not receive SessID. Maybe a wrong username or password?');
             }
 
-            let body = '';
-
-            resp.on('data', (chunk) => {
-                body += chunk.toString();
-            })
-
-            resp.on('end', () => {
-                let data: Record<string, string | number | string[] | null> = JSON.parse(body)[0];
-
-                if (data.success == 0) {
-                    throw new Error(`Unsuccesful login #${data.num_tries}: ${data.msg}`);
-                }
-
-                if (sid === null) {
-                    throw new Error('No SessID');
-                }
-
-                // There is actually no new data to be retrieved from the response JSON here, other than validation of
-                // the username and password, so we can just pass the sessid to login_by_id
-                // Possibly, we can even remove a listener for the response and use the sessionID immediately
-                // But this does not provide such a secure validation
-                const sess = login_by_id(sid[0], params.username, params.password);
-
-                if (callback !== undefined) {
-                    callback(sess);
-                }
-            });
+            // There is actually no new data to be retrieved from the response JSON here. We only need headers.
+            if (callback !== undefined) {
+                callback(login_by_id(sid[0], params.username, params.password));
+            }
         }
     );
 
