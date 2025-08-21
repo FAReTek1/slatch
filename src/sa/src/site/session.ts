@@ -35,13 +35,14 @@ export class Session extends base.BaseSiteComponent{
             params.password = '';
         }
 
-        super()
+        super({});
         this.session = this;
 
         this.id = params.id;
 
         this.user = new user.User({
-            name: params.username
+            name: params.username,
+            session: this
         });
         this.password = params.password;
         this.xtoken = params.xtoken;
