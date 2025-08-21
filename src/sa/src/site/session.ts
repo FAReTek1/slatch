@@ -70,7 +70,7 @@ export class Session extends base.BaseSiteComponent{
     }
 
     toString() {
-        return '<' + `Login for ${this.username}>`;
+        return `<Login for ${this.username}>`;
     }
 
     get username() {

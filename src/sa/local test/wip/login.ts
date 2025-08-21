@@ -18,5 +18,5 @@ sa.login({
     username: username,
     password: password
 }, sess => {
-    console.log(sess.username)
+    console.log(sess.toString())
 });
