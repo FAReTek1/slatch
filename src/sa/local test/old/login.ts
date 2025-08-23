@@ -16,7 +16,8 @@ async function main(){
         throw new Error(`sessId must be set`);
     }
 
-    const sess = sa.login_by_id(sessId);
+    const sess = await sa.login(username, password);
+    console.log(sess.id);
 
     console.log(await sess.connectFeatured());
 }

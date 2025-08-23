@@ -152,31 +152,31 @@ export function login_by_id(session_id: string, username?: string, password?: st
  * 1. creates a session id by posting a login request to Scratch's login API. (If this fails, scratchattach.exceptions.LoginFailure is raised)
  * 2. fetches the xtoken and other information by posting a request to scratch.mit.edu/session. (If this fails, a warning is displayed)
  *
+ * @param username
+ * @param password
  * @param params contains kwargs
  * Timeout for the request to Scratch's login API (in seconds). Defaults to 10.
  * @return An object that represents the created login / session
  */
-export async function login(params: {
-    username: string;
-    password: string;
-    timeout?: number;
-}) {
+export async function login(username: string, password: string,
+                            params?: {timeout?: number;}) {
+    params = params? params : {};
+
     if (params.timeout === undefined) {
         params.timeout = 10000;
     }
 
     // issue_login_warning()
-    const body = JSON.stringify({
-        username: params.username, password:params.password
-    });
 
     const _headers = {...commons.headers,
         Cookie: 'scratchcsrftoken=a;scratchlanguage=en;',
     };
 
     const resp = await axios.post(
-        'https://scratch.mit.edu/login/', body,
-        {
+        'https://scratch.mit.edu/login/', {
+            username: username,
+            password: password
+        }, {
             headers: _headers,
             timeout: params.timeout,
         });
@@ -194,5 +194,5 @@ export async function login(params: {
     }
 
     // There is actually no new data to be retrieved from the response JSON here. We only need headers.
-    return (login_by_id(sid[0], params.username, params.password));
+    return (login_by_id(sid[0], username, password));
 }
