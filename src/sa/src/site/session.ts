@@ -5,6 +5,7 @@ import * as user from './user';
 import * as assert from 'assert';
 import * as zlib from 'zlib';
 import axios from 'axios';
+import {getFeatured} from "../other/other_apis";
 
 /**
  * Represents a Scratch log in / session. Stores authentication data (session id and xtoken).
@@ -80,6 +81,10 @@ export class Session extends base.BaseSiteComponent{
 
     override getThumbnailUrl(_dims?: string): string {
         return this.user.getThumbnailUrl(_dims);
+    }
+
+    async connectFeatured() {
+        return await getFeatured(this);
     }
 }
 

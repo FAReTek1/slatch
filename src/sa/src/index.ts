@@ -5,4 +5,4 @@ export {BaseSiteComponent} from './site/base';
 export {Project} from './site/project';
 export {Studio} from './site/studio';
 export {User} from './site/user';
-export {featured} from './other/other_apis';
+export {getFeatured} from './other/other_apis';

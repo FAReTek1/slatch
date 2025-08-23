@@ -18,7 +18,7 @@ async function main(){
 
     const sess = sa.login_by_id(sessId);
 
-    console.log(sess.username);
+    console.log(await sess.connectFeatured());
 }
 
 main().then()

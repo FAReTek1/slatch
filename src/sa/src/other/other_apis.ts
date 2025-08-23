@@ -3,57 +3,32 @@ import * as project from '../site/project';
 import * as studio from "../site/studio";
 import * as session from "../site/session";
 import * as commons from '../utils/commons';
+import axios from 'axios';
 
-function featured_data(callback?: (data: Record<string, Record<string, string | number>[]>) => void) {
-    https.request(
-        'https://api.scratch.mit.edu/proxy/featured',
-        {
-            method: 'GET',
-        }, (resp) => {
-            let body = '';
-            resp.on('data', (chunk) => {body += chunk;});
-            resp.on('end', () => {
-                const data = JSON.parse(body);
-                callback && callback(data);
-            })
-        }
-    ).end();
-
+async function featured_data(): Promise<Record<string, Record<string, string | number>[]>> {
+    const resp = await axios.get('https://api.scratch.mit.edu/proxy/featured');
+    return resp.data;  // Axios automatically converts to JSON
 }
 
-export function featured(callback?: (data: Record<
-    'community_newest_projects' |
-    'community_most_remixed_projects' |
-    'scratch_design_studio' |
-    'curator_top_projects' |
-    'community_most_loved_projects' |
-    'community_featured_projects' |
-    'community_featured_studios', studio.Studio[] | project.Project[]>) => void, _session?: session.Session) {
-    featured_data((data) => {
-        let pdata: Record<string, studio.Studio[] | project.Project[]> = {
-            community_newest_projects: data.community_newest_projects.map(pjson => {
-                return project.Project.fromJSON(pjson, _session)
-            }),
-            community_most_remixed_projects: data.community_most_remixed_projects.map(pjson => {
-                return project.Project.fromJSON(pjson, _session)
-            }),
-            scratch_design_studio: data.scratch_design_studio.map(pjson => {
-                return project.Project.fromJSON(pjson, _session)
-            }),
-            curator_top_projects: data.curator_top_projects.map(pjson => {
-                return project.Project.fromJSON(pjson, _session)
-            }),
-            community_most_loved_projects: data.community_most_loved_projects.map(pjson => {
-                return project.Project.fromJSON(pjson, _session)
-            }),
-            community_featured_projects: data.community_featured_projects.map(pjson => {
-                return project.Project.fromJSON(pjson, _session)
-            }),
-            community_featured_studios: data.community_featured_studios.map(pjson => {
-                return studio.Studio.fromJSON(pjson, _session)
-            }),
-        };
+/**
+ * Fetch the projects from the scratch/featured projects api.
+ * @param session Provide a session to connect each project to the session
+ */
+export async function getFeatured(session?: session.Session): Promise<Record<
+    'community_newest_projects' | 'community_most_remixed_projects' | 'scratch_design_studio' |'curator_top_projects' |
+    'community_most_loved_projects' | 'community_featured_projects' | 'community_featured_studios',
+    studio.Studio[] | project.Project[]>> {
+    const data = await featured_data();
+    let ret: Record<string, studio.Studio[] | project.Project[]> = {};
 
-        callback && callback(pdata);
+    Object.entries(data).forEach((kv) => {
+        const [key, value] = kv;
+        ret[key] = value.map((jsonData) => {
+            return key == 'community_featured_studios' ?
+                studio.Studio.fromJSON(jsonData, session) :
+                project.Project.fromJSON(jsonData, session);
+        });
     });
+
+    return ret;
 }
