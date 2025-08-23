@@ -2,8 +2,9 @@ import * as commons from '../utils/commons';
 import * as base from './base';
 import * as user from './user';
 
+import * as assert from 'assert';
 import * as zlib from 'zlib';
-import * as https from 'https';
+import axios from 'axios';
 
 /**
  * Represents a Scratch log in / session. Stores authentication data (session id and xtoken).
@@ -134,7 +135,7 @@ export function login_by_id(session_id: string, username?: string, password?: st
         password: password,
     });
     if (xtoken !== undefined) {
-        commons.assert_eq(xtoken, _session.xtoken);
+        assert.equal(xtoken, _session.xtoken);
     }
 
     return _session;
@@ -148,16 +149,15 @@ export function login_by_id(session_id: string, username?: string, password?: st
  *
  * @param params contains kwargs
  * Timeout for the request to Scratch's login API (in seconds). Defaults to 10.
- * @param callback
  * @return An object that represents the created login / session
  */
-export function login(params: {
+export async function login(params: {
     username: string;
     password: string;
     timeout?: number;
-}, callback?: (session: Session) => void) {
+}) {
     if (params.timeout === undefined) {
-        params.timeout = 10;
+        params.timeout = 10000;
     }
 
     // issue_login_warning()
@@ -165,35 +165,29 @@ export function login(params: {
         username: params.username, password:params.password
     });
 
-    const _headers: Record<string, string | number> = {...commons.headers,
+    const _headers = {...commons.headers,
         Cookie: 'scratchcsrftoken=a;scratchlanguage=en;',
     };
 
-    const req = https.request(
-        'https://scratch.mit.edu/login/', {
-            method: 'POST',
+    const resp = await axios.post(
+        'https://scratch.mit.edu/login/', body,
+        {
             headers: _headers,
             timeout: params.timeout,
-        }, resp => {
-            const sc = resp.headers['set-cookie'];
+        });
 
-            if (sc === undefined) {
-                throw new Error('Did not receive set-cookie');
-            }
+    const sc = resp.headers['set-cookie'];
 
-            const sid = new RegExp('"(.*)"').exec(sc.toString());
-            if (sid === null) {
-                throw new Error('Did not receive SessID. Maybe a wrong username or password? Or possibly too ' +
-                    'many incorrect login attempts means you need to login manually online?');
-            }
+    if (sc === undefined) {
+        throw new Error('Did not receive set-cookie');
+    }
 
-            // There is actually no new data to be retrieved from the response JSON here. We only need headers.
-            if (callback !== undefined) {
-                callback(login_by_id(sid[0], params.username, params.password));
-            }
-        }
-    );
+    const sid = new RegExp('"(.*)"').exec(sc.toString());
+    if (sid === null) {
+        throw new Error('Did not receive SessID. Maybe a wrong username or password? Or possibly too ' +
+            'many incorrect login attempts means you need to login manually online?');
+    }
 
-    req.write(body);
-    req.end();
+    // There is actually no new data to be retrieved from the response JSON here. We only need headers.
+    return (login_by_id(sid[0], params.username, params.password));
 }

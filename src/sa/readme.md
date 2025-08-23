@@ -10,3 +10,8 @@ Note it is only loosely based on it, and will probably not provide so many abstr
 
 if you want a typescript version of scratchattach, i dont recommend using this.
 I do not _know_ typescript, but i can _code_ it. But that does not mean my code is good.
+
+# differences from python scratchattach
+
+- timouts are in **milliseconds**, not seconds
+- async using promises
