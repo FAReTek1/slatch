@@ -4,72 +4,84 @@
  * TODO: consider using namespaces instead of identifiers like these
  */
 
-// root
-const root = () => `https://scratch.mit.edu`
+export namespace urls {
+    const root = () => `https://scratch.mit.edu`
 
-// root/
-const forumTopicXml = (id: number) => `https://scratch.mit.edu/discuss/feeds/topic/${id}`
-const forumTopicPage = (id: number) => `https://scratch.mit.edu/discuss/topic/${id}/`
-const forumPostEdit = (id: number) => `https://scratch.mit.edu/discuss/post/${id}/edit/`
+    namespace asset {
+        const assetGet = (md5ext: string) => `https://assets.scratch.mit.edu/internalapi/asset/${md5ext}/get/`
+    }
 
-const projectPage = (id: number) => `https://scratch.mit.edu/projects/${id}`
+    namespace backpack {
+        const backpackThumbnail = (thumbnail: string) => `https://backpack.scratch.mit.edu/${thumbnail}`
+        const backpackDownload = (body: string) => `https://backpack.scratch.mit.edu/${body}`
+        const backpackDelete = (username: string, id: number) => `https://backpack.scratch.mit.edu/${username}/${id}`
+    }
 
-const sessionPage = () => `https://scratch.mit.edu/session`
-const sessionSettings = () => `https://scratch.mit.edu/accounts/settings/`
-const sessionEmailChange = () => `https://scratch.mit.edu/accounts/email_change/`
-const sessionDelete = () => `https://scratch.mit.edu/accounts/logout/`  // Don't think this works
-const sessionMessages = (username: string) => `https://api.scratch.mit.edu/users/${username}/messages`  // bound to session because you cannot do this with an arbitrary user
-const sessionAdminMessages = (username: string) => `https://api.scratch.mit.edu/users/${username}/messages/admin`  // bound to session because you cannot do this with an arbitrary user
+    namespace classroom {
+        const educatorAlertSAPI = () => `https://scratch.mit.edu/site-api/classrooms/alerts/`;
+    }
 
-const statisticsDaily = () => `https://scratch.mit.edu/statistics/data/daily/`
-const statisticsMonthlyGa = () => `https://scratch.mit.edu/statistics/data/monthly-ga/`
-const statisticsMonthly = () => `https://scratch.mit.edu/statistics/data/monthly/`
+    namespace cloud {
+        const cloudScratch = () => `wss://clouddata.scratch.mit.edu`
+    }
 
-const studioPage = (id: number) =>  `https://scratch.mit.edu/studios/${id}`
+    namespace forumTopic {
+        const forumTopicXml = (id: number) => `https://scratch.mit.edu/discuss/feeds/topic/${id}`
+        const forumTopicPage = (id: number) => `https://scratch.mit.edu/discuss/topic/${id}/`
+        const forumTopicOclrReactions = (id: number) => `https://my-ocular.jeffalo.net/api/reactions/${id}`
+    }
 
-const userPage = (username: string) => `https://scratch.mit.edu/users/${username}/`;
-const userPageFollowers = (username: string) => `https://scratch.mit.edu/users/${username}/followers/`;
+    namespace forumPost {
+        const forumPostEdit = (id: number) => `https://scratch.mit.edu/discuss/post/${id}/edit/`
+    }
 
-// root/site-api
-const educatorAlertSAPI = () => `https://scratch.mit.edu/site-api/classrooms/alerts/`;
+    namespace project {
+        const projectPage = (id: number) => `https://scratch.mit.edu/projects/${id}`
+        const projectAPIRemixes = (id: number) => `https://api.scratch.mit.edu/projects/${id}/remixes`
+        const projectDownload = (id: number) => `"https://projects.scratch.mit.edu/${id}`
+    }
 
-const studioSAPIFollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/${id}/add/`
-const studioSAPIUnfollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/${id}/remove/`
+    namespace session {
+        const sessionPage = () => `https://scratch.mit.edu/session`
+        const sessionSettings = () => `https://scratch.mit.edu/accounts/settings/`
+        const sessionEmailChange = () => `https://scratch.mit.edu/accounts/email_change/`
+        const sessionDelete = () => `https://scratch.mit.edu/accounts/logout/`  // Don't think this works
+        const sessionMessages = (username: string) => `https://api.scratch.mit.edu/users/${username}/messages`  // bound to session because you cannot do this with an arbitrary user
+        const sessionAdminMessages = (username: string) => `https://api.scratch.mit.edu/users/${username}/messages/admin`  // bound to session because you cannot do this with an arbitrary user
+    }
 
-const userSAPI = (username: string) => `https://scratch.mit.edu/site-api/users/all/${username}/`;
+    namespace stats {
+        const statisticsDaily = () => `https://scratch.mit.edu/statistics/data/daily/`
+        const statisticsMonthlyGa = () => `https://scratch.mit.edu/statistics/data/monthly-ga/`
+        const statisticsMonthly = () => `https://scratch.mit.edu/statistics/data/monthly/`
+    }
 
-// api.scratch.mit.edu
-const newsAPI = () => `https://api.scratch.mit.edu/news`
-const featuredAPI = () => `https://api.scratch.mit.edu/proxy/featured`
+    namespace studio {
+        const studioPage = (id: number) =>  `https://scratch.mit.edu/studios/${id}`
+        const studioSAPIFollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/${id}/add/`
+        const studioSAPIUnfollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/${id}/remove/`
+        const studioAPI = (id: number) => `https://api.scratch.mit.edu/studios/${id}`
+        const studioAPIComments = (id: number) => `https://api.scratch.mit.edu/studios/${id}/comments/`
+        const studioAPICommentReplies = (id: number, commentId: number) => `https://api.scratch.mit.edu/studios/${id}/comments/${commentId}/replies`
+        const studioAPIComment = (id: number, commentId: number) => `https://api.scratch.mit.edu/studios/${id}/comments/${commentId}`
+        // https://api.scratch.mit.edu/proxy/comments/studio/${id} ??
+    }
 
-const projectAPIRemixes = (id: number) => `https://api.scratch.mit.edu/projects/${id}/remixes`
+    namespace translate {
+        const translateServices = () => `https://translate-service.scratch.mit.edu/supported`
+    }
 
-const studioAPI = (id: number) => `https://api.scratch.mit.edu/studios/${id}`
-const studioAPIComments = (id: number) => `https://api.scratch.mit.edu/studios/${id}/comments/`
-const studioAPICommentReplies = (id: number, commentId: number) => `https://api.scratch.mit.edu/studios/${id}/comments/${commentId}/replies`
-const studioAPIComment = (id: number, commentId: number) => `https://api.scratch.mit.edu/studios/${id}/comments/${commentId}`
+    namespace user {
+        const userPage = (username: string) => `https://scratch.mit.edu/users/${username}/`;
+        const userPageFollowers = (username: string) => `https://scratch.mit.edu/users/${username}/followers/`;
+        const userSAPI = (username: string) => `https://scratch.mit.edu/site-api/users/all/${username}/`;
+        const userAPI = (username: string) => `https://api.scratch.mit.edu/users/${username}`;
+        const userAPIMessageCount = (username: string) => `https://api.scratch.mit.edu/users/${username}/messages/count`;
 
-// https://api.scratch.mit.edu/proxy/comments/studio/${id} ?
+    }
 
-const userAPI = (username: string) => `https://api.scratch.mit.edu/users/${username}`;
-const userAPIMessageCount = (username: string) => `https://api.scratch.mit.edu/users/${username}/messages/count`;
-
-// cloud
-const cloudScratch = () => `wss://clouddata.scratch.mit.edu`
-
-// assets
-const assetGet = (md5ext: string) => `https://assets.scratch.mit.edu/internalapi/asset/${md5ext}/get/`
-
-// backpack
-const backpackThumbnail = (thumbnail: string) => `https://backpack.scratch.mit.edu/${thumbnail}`
-const backpackDownload = (body: string) => `https://backpack.scratch.mit.edu/${body}`
-const backpackDelete = (username: string, id: number) => `https://backpack.scratch.mit.edu/${username}/${id}`
-
-// projects
-const projectDownload = (id: number) => `"https://projects.scratch.mit.edu/${id}`
-
-// translate
-const translateServices = () => `https://translate-service.scratch.mit.edu/supported`
-
-// ocular
-const forumTopicOclrReactions = (id: number) => `https://my-ocular.jeffalo.net/api/reactions/${id}`
+    namespace other {
+        const newsAPI = () => `https://api.scratch.mit.edu/news`
+        const featuredAPI = () => `https://api.scratch.mit.edu/proxy/featured`
+    }
+}
