@@ -33,8 +33,8 @@ const userPageFollowers = (username: string) => `https://scratch.mit.edu/users/$
 // root/site-api
 const educatorAlertSAPI = () => `https://scratch.mit.edu/site-api/classrooms/alerts/`;
 
-const studioSAPIFollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/{id}/add/`
-const studioSAPIUnfollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/{id}/remove/`
+const studioSAPIFollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/${id}/add/`
+const studioSAPIUnfollow = (id: number) => `https://scratch.mit.edu/site-api/users/bookmarkers/${id}/remove/`
 
 const userSAPI = (username: string) => `https://scratch.mit.edu/site-api/users/all/${username}/`;
 
