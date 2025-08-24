@@ -194,5 +194,5 @@ export async function login(username: string, password: string,
     }
 
     // There is actually no new data to be retrieved from the response JSON here. We only need headers.
-    return (login_by_id(sid[0], username, password));
+    return login_by_id(sid[0], username, password);
 }

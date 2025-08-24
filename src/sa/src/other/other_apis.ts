@@ -10,7 +10,8 @@ async function featured_data(): Promise<Record<string, Record<string, string | n
 
 /**
  * Fetch the projects from the scratch/featured projects api.
- * @param session Provide a session to connect each project to the session
+ * @param session Provide a session to connect each project to the session.
+ *  ***If you are doing this, use session.connectFeatured, which uses this under the hood***
  */
 export async function getFeatured(session?: session.Session): Promise<Record<
     'community_newest_projects' | 'community_most_remixed_projects' | 'scratch_design_studio' |'curator_top_projects' |
