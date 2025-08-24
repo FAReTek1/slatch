@@ -15,3 +15,4 @@ I do not _know_ typescript, but i can _code_ it. But that does not mean my code 
 
 - timouts are in **milliseconds**, not seconds
 - async using promises
+- currently no warning message when logging in
