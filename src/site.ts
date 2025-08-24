@@ -1,15 +1,45 @@
 import * as fs from 'fs';
 import * as sa from "./sa/src/index";
 
-export function getSiteFileName(name: string="") {
+import jsdom from 'jsdom';
+
+export function getFileName(name: string = "") {
     return `${__dirname}/../site/${name}`;
 }
 
-export function getSiteFile(name: string) {
-    return fs.readFileSync(getSiteFileName(name), 'utf-8');
+export function getFile(name: string) {
+    return fs.readFileSync(getFileName(name), 'utf-8');
 }
 
-export function generateBscHTML(bscs: sa.BaseSiteComponent[], width: string="120", attrs: string='') {
+export function getDom(name: string): [string, jsdom.JSDOM] {
+    const content = getFile(name);
+    const dom = new jsdom.JSDOM(content);
+
+    preprocess(dom);
+
+    return [content, dom];
+}
+/**
+ * Preprocess dom with class=preprocess-includes
+ * @param dom 
+ */
+function preprocess(dom: jsdom.JSDOM) {
+    dom.window.document.querySelectorAll('.preprocess-include').forEach((elem) => {
+        const src = elem.getAttribute('src');
+        if (src) {
+            elem.textContent = getFile(src);
+        }
+    });
+
+    dom.window.document.querySelectorAll('.preprocess-replace').forEach((elem) => {
+        const src = elem.getAttribute('src');
+        if (src) {
+            elem.replaceWith(getFile(src));
+        }
+    });
+}
+
+export function generateBscHTML(bscs: sa.BaseSiteComponent[], width: string = "120", attrs: string = '') {
     let ret = `<div class="bsc-view">`;
 
     bscs.forEach((bsc) => {
