@@ -72,7 +72,7 @@ export namespace studio {
 }
 
 export namespace translate {
-    const services = () => `https://translate-service.scratch.mit.edu/supported`
+    export const services = () => `https://translate-service.scratch.mit.edu/supported`
 }
 
 export namespace user {
