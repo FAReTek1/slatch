@@ -1,13 +1,15 @@
 import * as base from './base';
 import * as session from './session';
 
+import * as urls from '../utils/urls'
+
 export class User extends base.BaseSiteComponent {
-    id?: string;
+    id?: number;
     name?: string;
 
     constructor(params: {
         name?: string;
-        id?: string;
+        id?: number;
         session?: session.Session
     }) {
         super({session: params.session});
@@ -17,6 +19,10 @@ export class User extends base.BaseSiteComponent {
     }
 
     override getImageUrl(dims: string='60x60'): string {
-        return `https://uploads.scratch.mit.edu/get_image/user/${this.id}_${dims}.png`;
+        if (this.id === undefined) {
+            throw 'not implemented: user.update()';
+        }
+
+        return urls.user.getImage(this.id, dims);
     }
 }

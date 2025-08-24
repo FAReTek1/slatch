@@ -83,6 +83,7 @@ export namespace user {
     export const sapi = (username: string) => `${root}/site-api/users/all/${username}/`;
     export const api = (username: string) => `${apiUrl}/users/${username}`;
     export const messageCount = (username: string) => `${apiUrl}/users/${username}/messages/count`;
+    export const getImage = (id: number, dims: string) => `https://uploads.scratch.mit.edu/get_image/user/${id}_${dims}.png`
 }
 
 export namespace other {

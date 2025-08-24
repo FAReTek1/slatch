@@ -68,7 +68,7 @@ export class Session extends base.BaseSiteComponent{
         let [data, date] = decode_session_id(this.id);
 
         this.user.name = data.username;
-        this.user.id = data._auth_user_id;
+        this.user.id = Number(data._auth_user_id);
         this.xtoken = data.token;
         this.login_ip = data['login-ip'];
         this.login_date = date;

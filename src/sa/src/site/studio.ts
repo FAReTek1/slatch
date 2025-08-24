@@ -2,8 +2,6 @@ import * as base from './base';
 import * as session from './session';
 import * as urls from '../utils/urls';
 
-import * as assert from 'assert';
-
 export class Studio extends base.BaseSiteComponent {
     id: number;
     title?: string;
