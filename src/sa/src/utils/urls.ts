@@ -87,3 +87,7 @@ export namespace other {
     export const news = () => `${apiUrl}/news`
     export const featured = () => `${apiUrl}/proxy/featured`
 }
+
+export namespace images {
+    export const privateCat = () => `https://cdn.scratch.mit.edu/scratchr2/static/__3e14301069f00819d1c44531f23cc811__//treejs/img/private_cat.png`
+}
