@@ -6,3 +6,4 @@ export {Project} from './site/project';
 export {Studio} from './site/studio';
 export {User} from './site/user';
 export {getFeatured} from './other/other_apis';
+export * as urls from './utils/urls';

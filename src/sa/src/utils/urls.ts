@@ -2,84 +2,85 @@
  * Stores all URLs used by the module. Suggested by Waakul
  */
 
-export namespace urls {
-    let root = `https://scratch.mit.edu`
-    let apiUrl = `https://api.scratch.mit.edu`
+export let root = `https://scratch.mit.edu`
+export let apiUrl = `https://api.scratch.mit.edu`
 
-    namespace asset {
-        const get = (md5ext: string) => `https://assets.scratch.mit.edu/internalapi/asset/${md5ext}/get/`
-    }
+export const setRoot = (newRoot: string)=> {root = newRoot}
+export const setapiUrl = (newApiUrl: string)=> {apiUrl = newApiUrl}
 
-    namespace backpack {
-        const thumbnail = (thumbnail: string) => `https://backpack.scratch.mit.edu/${thumbnail}`
-        const download = (body: string) => `https://backpack.scratch.mit.edu/${body}`
-        const remove = (username: string, id: number) => `https://backpack.scratch.mit.edu/${username}/${id}`
-    }
+export namespace asset {
+    export const get = (md5ext: string) => `https://assets.scratch.mit.edu/internalapi/asset/${md5ext}/get/`
+}
 
-    namespace classroom {
-        const alerts = () => `${root}/site-api/classrooms/alerts/`;
-    }
+export namespace backpack {
+    export const thumbnail = (thumbnail: string) => `https://backpack.scratch.mit.edu/${thumbnail}`
+    export const download = (body: string) => `https://backpack.scratch.mit.edu/${body}`
+    export const remove = (username: string, id: number) => `https://backpack.scratch.mit.edu/${username}/${id}`
+}
 
-    namespace cloud {
-        const scratch = () => `wss://clouddata.scratch.mit.edu`
-    }
+export namespace classroom {
+    const alerts = () => `${root}/site-api/classrooms/alerts/`;
+}
 
-    namespace forumTopic {
-        const xml = (id: number) => `${root}/discuss/feeds/topic/${id}`
-        const page = (id: number) => `${root}/discuss/topic/${id}/`
-        const ocularReactions = (id: number) => `https://my-ocular.jeffalo.net/api/reactions/${id}`
-    }
+export namespace cloud {
+    export const scratch = () => `wss://clouddata.scratch.mit.edu`
+}
 
-    namespace forumPost {
-        const edit = (id: number) => `${root}/discuss/post/${id}/edit/`
-    }
+export namespace forumTopic {
+    export const xml = (id: number) => `${root}/discuss/feeds/topic/${id}`
+    export const page = (id: number) => `${root}/discuss/topic/${id}/`
+    export const ocularReactions = (id: number) => `https://my-ocular.jeffalo.net/api/reactions/${id}`
+}
 
-    namespace project {
-        const page = (id: number) => `${root}/projects/${id}`
-        const remixes = (id: number) => `${apiUrl}/projects/${id}/remixes`
-        const download = (id: number) => `"https://projects.scratch.mit.edu/${id}`
-    }
+export namespace forumPost {
+    export const edit = (id: number) => `${root}/discuss/post/${id}/edit/`
+}
 
-    namespace session {
-        const page = () => `${root}/session`
-        const settings = () => `${root}/accounts/settings/`
-        const changeEmail = () => `${root}/accounts/email_change/`
-        const logout = () => `${root}/accounts/logout/`  // Don't think this works
-        const messages = (username: string) => `${apiUrl}/users/${username}/messages`  // bound to session because you cannot do this with an arbitrary user
-        const adminMessages = (username: string) => `${apiUrl}/users/${username}/messages/admin`  // bound to session because you cannot do this with an arbitrary user
-    }
+export namespace project {
+    export const page = (id: number) => `${root}/projects/${id}`
+    export const remixes = (id: number) => `${apiUrl}/projects/${id}/remixes`
+    export const download = (id: number) => `"https://projects.scratch.mit.edu/${id}`
+}
 
-    namespace stats {
-        const daily = () => `${root}/statistics/data/daily/`
-        const monthlyGa = () => `${root}/statistics/data/monthly-ga/`
-        const monthly = () => `${root}/statistics/data/monthly/`
-    }
+export namespace session {
+    export const page = () => `${root}/session`
+    export const settings = () => `${root}/accounts/settings/`
+    export const changeEmail = () => `${root}/accounts/email_change/`
+    export const logout = () => `${root}/accounts/logout/`  // Don't think this works
+    export const messages = (username: string) => `${apiUrl}/users/${username}/messages`  // bound to session because you cannot do this with an arbitrary user
+    export const adminMessages = (username: string) => `${apiUrl}/users/${username}/messages/admin`  // bound to session because you cannot do this with an arbitrary user
+}
 
-    namespace studio {
-        const page = (id: number) =>  `${root}/studios/${id}`
-        const follow = (id: number) => `${root}/site-api/users/bookmarkers/${id}/add/`
-        const unfollow = (id: number) => `${root}/site-api/users/bookmarkers/${id}/remove/`
-        const api = (id: number) => `${apiUrl}/studios/${id}`
-        const comments = (id: number) => `${apiUrl}/studios/${id}/comments/`
-        const commentReplies = (id: number, commentId: number) => `${apiUrl}/studios/${id}/comments/${commentId}/replies`
-        const comment = (id: number, commentId: number) => `${apiUrl}/studios/${id}/comments/${commentId}`
-        // ${apiUrl}/proxy/comments/studio/${id} ??
-    }
+export namespace stats {
+    export const daily = () => `${root}/statistics/data/daily/`
+    export const monthlyGa = () => `${root}/statistics/data/monthly-ga/`
+    export const monthly = () => `${root}/statistics/data/monthly/`
+}
 
-    namespace translate {
-        const services = () => `https://translate-service.scratch.mit.edu/supported`
-    }
+export namespace studio {
+    export const page = (id: number) => `${root}/studios/${id}`
+    export const follow = (id: number) => `${root}/site-api/users/bookmarkers/${id}/add/`
+    export const unfollow = (id: number) => `${root}/site-api/users/bookmarkers/${id}/remove/`
+    export const api = (id: number) => `${apiUrl}/studios/${id}`
+    export const comments = (id: number) => `${apiUrl}/studios/${id}/comments/`
+    export const commentReplies = (id: number, commentId: number) => `${apiUrl}/studios/${id}/comments/${commentId}/replies`
+    export const comment = (id: number, commentId: number) => `${apiUrl}/studios/${id}/comments/${commentId}`
+    // ${apiUrl}/proxy/comments/studio/${id} ??
+}
 
-    namespace user {
-        const page = (username: string) => `${root}/users/${username}/`;
-        const followers = (username: string) => `${root}/users/${username}/followers/`;
-        const sapi = (username: string) => `${root}/site-api/users/all/${username}/`;
-        const api = (username: string) => `${apiUrl}/users/${username}`;
-        const messageCount = (username: string) => `${apiUrl}/users/${username}/messages/count`;
-    }
+export namespace translate {
+    const services = () => `https://translate-service.scratch.mit.edu/supported`
+}
 
-    namespace other {
-        const news = () => `${apiUrl}/news`
-        const featured = () => `${apiUrl}/proxy/featured`
-    }
+export namespace user {
+    export const page = (username: string) => `${root}/users/${username}/`;
+    export const followers = (username: string) => `${root}/users/${username}/followers/`;
+    export const sapi = (username: string) => `${root}/site-api/users/all/${username}/`;
+    export const api = (username: string) => `${apiUrl}/users/${username}`;
+    export const messageCount = (username: string) => `${apiUrl}/users/${username}/messages/count`;
+}
+
+export namespace other {
+    export const news = () => `${apiUrl}/news`
+    export const featured = () => `${apiUrl}/proxy/featured`
 }
