@@ -22,8 +22,6 @@ export function activate(context: vscode.ExtensionContext) {
 					[panel.webview.html, dom] = site.getDom('feed.html');
 
 					sa.getFeatured().then((data) => {
-						dom = new jsdom.JSDOM(panel.webview.html);						
-
 						function gendom(id: string) {
 							const div = dom.window.document.querySelector(`div[id=${id}]`);
 							if (div) {
@@ -40,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 						gendom('community_featured_studios');
 
 						panel.webview.html = dom.serialize();
+						console.log(panel.webview.html);
 					});
 				}),
 				new tree.Item('Featured Projects'),

@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import * as assert from 'assert';
+
 import * as sa from "./sa/src/index";
 
 import jsdom from 'jsdom';
@@ -13,9 +15,7 @@ export function getFile(name: string) {
 
 export function getDom(name: string): [string, jsdom.JSDOM] {
     const content = getFile(name);
-    const dom = new jsdom.JSDOM(content);
-
-    preprocess(dom);
+    const dom = preprocess(content);
 
     return [content, dom];
 }
@@ -23,20 +23,38 @@ export function getDom(name: string): [string, jsdom.JSDOM] {
  * Preprocess dom with class=preprocess-includes
  * @param dom 
  */
-function preprocess(dom: jsdom.JSDOM) {
-    dom.window.document.querySelectorAll('.preprocess-include').forEach((elem) => {
-        const src = elem.getAttribute('src');
-        if (src) {
-            elem.textContent = getFile(src);
+function preprocess(content: string) {
+    console.log(content);
+
+    const dom = new jsdom.JSDOM(content);
+
+    let preprocesses = 0;
+
+    dom.window.document.querySelectorAll('.preprocess').forEach((elem) => {
+        if (elem.textContent === ''){
+            preprocesses++;
+
+            const src = elem.getAttribute('src');
+            switch (elem.className) {
+                case 'preprocess include':
+                    elem.textContent = getFile(src!);
+                    break;
+
+                case 'preprocess replace':
+                    elem.replaceWith(getFile(src!));
+                    break;
+
+                default:
+                    console.warn(elem.className);
+            }
         }
     });
 
-    dom.window.document.querySelectorAll('.preprocess-replace').forEach((elem) => {
-        const src = elem.getAttribute('src');
-        if (src) {
-            elem.replaceWith(getFile(src));
-        }
-    });
+    if (preprocesses > 0) {
+        return preprocess(dom.serialize());
+    }
+
+    return dom;
 }
 
 export function generateBscHTML(bscs: sa.BaseSiteComponent[], width: string = "120", attrs: string = '') {
