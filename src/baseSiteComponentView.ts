@@ -20,7 +20,7 @@ export function generateBscHTML(bscs: sa.BaseSiteComponent[], width: string="120
                 flex-direction: column;
                 max-width: ${width}px;
             ">
-                <img src="${bsc.getThumbnailUrl()}" width="${width}" ${attrs}/>
+                <img src="${bsc.getImageUrl()}" width="${width}" ${attrs}/>
                 ${bsc.title}
             </a>`;
         } else if (bsc instanceof sa.Studio) {
@@ -30,12 +30,12 @@ export function generateBscHTML(bscs: sa.BaseSiteComponent[], width: string="120
                 flex-direction: column;
                 max-width: ${width}px;
             ">
-                <img src="${bsc.getThumbnailUrl()}" width="${width}" ${attrs}/>
+                <img src="${bsc.getImageUrl()}" width="${width}" ${attrs}/>
                 ${bsc.title}
             </a>`;
         } else {
             ret += `
-            <div><img src="${bsc.getThumbnailUrl()}" width="${width}" ${attrs}/></div>`;
+            <div><img src="${bsc.getImageUrl()}" width="${width}" ${attrs}/></div>`;
         }
 
     });

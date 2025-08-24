@@ -1,11 +1,14 @@
-import * as commons from '../utils/commons';
 import * as base from './base';
 import * as user from './user';
+
+import * as commons from '../utils/commons';
+import * as urls from '../utils/urls';
+import {getFeatured} from "../other/other_apis";
 
 import * as assert from 'assert';
 import * as zlib from 'zlib';
 import axios from 'axios';
-import {getFeatured} from "../other/other_apis";
+
 
 /**
  * Represents a Scratch log in / session. Stores authentication data (session id and xtoken).
@@ -79,8 +82,8 @@ export class Session extends base.BaseSiteComponent{
         return this.user.name;
     }
 
-    override getThumbnailUrl(_dims?: string): string {
-        return this.user.getThumbnailUrl(_dims);
+    override getImageUrl(_dims?: string): string {
+        return this.user.getImageUrl(_dims);
     }
 
     async connectFeatured() {
@@ -173,7 +176,7 @@ export async function login(username: string, password: string,
     };
 
     const resp = await axios.post(
-        'https://scratch.mit.edu/login/', {
+        urls.session.login(), {
             username: username,
             password: password
         }, {

@@ -1,7 +1,7 @@
 import * as base from './base';
 import * as session from './session';
 import * as user from './user';
-import * as commons from '../utils/commons';
+import * as urls from '../utils/urls';
 
 /**
  * Represents an unshared Scratch project that can't be accessed.
@@ -36,12 +36,11 @@ export class PartialProject extends base.BaseSiteComponent {
     }
 
     get url() {
-        return `https://scratch.mit.edu/projects/${this.id}/`;
+        return urls.project.page(this.id);
     }
 
-    override getThumbnailUrl(dims: string='144x108'): string {
-        // return `https://uploads.scratch.mit.edu/projects/thumbnails/${this.id}.png`;
-        return `https://uploads.scratch.mit.edu/get_image/project/${this.id}_${dims}.png`
+    override getImageUrl(dims: string='144x108'): string {
+        return urls.project.getImage(this.id, dims);
     }
 }
 

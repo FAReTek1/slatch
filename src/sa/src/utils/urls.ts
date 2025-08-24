@@ -19,7 +19,7 @@ export namespace backpack {
 }
 
 export namespace classroom {
-    const alerts = () => `${root}/site-api/classrooms/alerts/`;
+    export const alerts = () => `${root}/site-api/classrooms/alerts/`;
 }
 
 export namespace cloud {
@@ -40,10 +40,13 @@ export namespace project {
     export const page = (id: number) => `${root}/projects/${id}`
     export const remixes = (id: number) => `${apiUrl}/projects/${id}/remixes`
     export const download = (id: number) => `"https://projects.scratch.mit.edu/${id}`
+    export const getImage = (id: number, dims: string) => `https://uploads.scratch.mit.edu/get_image/project/${id}_${dims}.png`
+    export const getThumbnail = (id: number) => `https://uploads.scratch.mit.edu/projects/thumbnails/${id}.png`
 }
 
 export namespace session {
     export const page = () => `${root}/session`
+    export const login = () => `${root}/login/`
     export const settings = () => `${root}/accounts/settings/`
     export const changeEmail = () => `${root}/accounts/email_change/`
     export const logout = () => `${root}/accounts/logout/`  // Don't think this works

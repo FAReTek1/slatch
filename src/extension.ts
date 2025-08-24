@@ -116,7 +116,7 @@ class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 					console.log(panel.webview.html);
 
-					sa.featured((data) => {
+					sa.getFeatured().then((data) => {
 						dom = new jsdom.JSDOM(panel.webview.html);						
 
 						function gendom(id: string) {
