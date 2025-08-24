@@ -1,12 +1,15 @@
 import * as base from './base';
 import * as session from './session';
+import * as urls from '../utils/urls';
+
+import * as assert from 'assert';
 
 export class Studio extends base.BaseSiteComponent {
-    id?: number;
+    id: number;
     title?: string;
 
     constructor(params: {
-        id?: number;
+        id: number;
         title?: string;
         session?: session.Session;
     }) {
@@ -27,11 +30,10 @@ export class Studio extends base.BaseSiteComponent {
     }
 
     override getImageUrl(dims: string='170x100'): string {
-        // return `https://uploads.scratch.mit.edu/galleries/thumbnails/${this.id}.png`;
-        return `https://uploads.scratch.mit.edu/get_image/gallery/${this.id}_${dims}.png`;
+        return urls.studio.getImage(this.id, dims);
     }
 
     get url() {
-        return `https://scratch.mit.edu/studios/${this.id}/`;
+        return urls.studio.page(this.id);
     }
 }

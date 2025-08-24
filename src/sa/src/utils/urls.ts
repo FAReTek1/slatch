@@ -68,6 +68,8 @@ export namespace studio {
     export const comments = (id: number) => `${apiUrl}/studios/${id}/comments/`
     export const commentReplies = (id: number, commentId: number) => `${apiUrl}/studios/${id}/comments/${commentId}/replies`
     export const comment = (id: number, commentId: number) => `${apiUrl}/studios/${id}/comments/${commentId}`
+    export const thumbnail = (id: number) => `https://uploads.scratch.mit.edu/galleries/thumbnails/${id}.png`;
+    export const getImage = (id: number, dims: string) => `https://uploads.scratch.mit.edu/get_image/gallery/${id}_${dims}.png`;
     // ${apiUrl}/proxy/comments/studio/${id} ??
 }
 
