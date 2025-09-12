@@ -110,7 +110,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 			<head>
 				<link href="${styleMainUri}" rel="stylesheet" />
 			</head>
-        	<h1>HEY2</h1>
+        	<h6>Project runner</h6>
 			<div class="controls">
         		<img src="${greenFlagUri}" class="green-flag" title="Go">
         		<img src="${stopUri}" class="stop" title="Stop">
@@ -136,11 +136,25 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 				scaffolding.usePackagedRuntime = false;
 
 				console.log("Setup scaffolding")
+
+				const project = document.getElementById('project');
+				const greenFlag = document.querySelector('.green-flag');
+				const stop = document.querySelector('.stop');
 			
 				scaffolding.setup();
-				scaffolding.appendTo(document.getElementById('project'));
+				scaffolding.appendTo(project);
 
 				console.log("ready almost");
+
+				async function init(data) {
+					console.log("got init");
+					await scaffolding.loadProject(data);
+					console.log("inited");
+
+					greenFlag.onclick = async (e) => {
+						scaffolding.greenFlag();
+					}
+				}
 
 				window.addEventListener("message", async (event) => {
 					const message = event.data;
@@ -149,17 +163,12 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 					
 					switch (name) {
 						case "init":
-							console.log("got init");
-							await scaffolding.loadProject(data);
-							console.log("loaded");
+							init(data);
 							break;
-						default:
-							console.log("Unkown name: " + name);
-					}					
+					}
 				});
 				console.log("slatch ready");
 				vscode.postMessage("ready");
-
 			</script>
         </html>
 		`;
