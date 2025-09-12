@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as sb3 from './sb3';
 // import * as tree from './tree';
 // import * as sa from './sa/src/index';
 // import * as site from './site';
@@ -17,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// 					vscode.ViewColumn.One,
 	// 					{}
 	// 				);
-					
+
 	// 				let dom: jsdom.JSDOM;
 	// 				[panel.webview.html, dom] = site.getDom('feed.html');
 
@@ -51,5 +52,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// 		])
 	// 	]));
 
-	
+	vscode.window.registerCustomEditorProvider('slatch.sb3', new sb3.Provider(context), {
+		webviewOptions: {
+			retainContextWhenHidden: true,
+		},
+	});
 }

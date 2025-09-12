@@ -1,0 +1,25 @@
+/* from https://turbowarp.org/ */
+
+.green-flag {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.375rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.stop {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.375rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+div.controls {
+    display: flex;
+}
+#project {
+    width: 480px;
+    height: 360px;
+}

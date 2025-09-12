@@ -12,6 +12,19 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "customEditors": [
+      {
+        "viewType": "slatch.sb3",
+        "displayName": "sb3 project runner",
+        "selector": [
+          {
+            "filenamePattern": "*.sb3"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+
     "viewsContainers": {
       "activitybar": [
         {
@@ -33,6 +46,10 @@
       {
         "command": "slatch.Tree.select",
         "title": "Slatch: select a tree node (INTERNAL)"
+      },
+      {
+        "command": "slatch.sb3.open",
+        "title": "open an sb3 file"
       }
     ],
     "menus": {
