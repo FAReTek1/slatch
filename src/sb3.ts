@@ -74,6 +74,15 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 		webviewPanel: vscode.WebviewPanel,
 		_token: vscode.CancellationToken
 	): Promise<void> {
+		// setup terminal
+		const out = vscode.window.createOutputChannel(`Scratch project output`);
+		function outLog(msg: string, end: string = '\n') {
+			out.append(`${msg}${end}`);
+		}
+
+		outLog("Opening scratch project");
+		out.show();
+
 		const webview = webviewPanel.webview;
 
 		// Add the webview to our internal set of active webviews
@@ -89,8 +98,6 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 		}
 
 		webview.html = /*html*/`<h1>Loading</h1>`;
-
-		// const filedata = await vscode.workspace.fs.readFile(document.uri);
 
 		const greenFlagUri = webview.asWebviewUri(vscode.Uri.joinPath(
 			this._context.extensionUri, 'media', 'greenFlag.svg'
@@ -145,14 +152,24 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
         </html>
 		`;
 
+		function handleLogMsg(type: string, content: any) {
+			outLog(`${type}: ${content}`);
+		}
+
 		// Wait for the webview to be properly ready before we init
 		webview.onDidReceiveMessage(async e => {
-			console.log(`Vscode got message ${e}`);
+			const name = e.name;
+			const data = e.data;
 
-			switch (e) {
+			console.log(`Vscode got message ${name}: ${data}`);
+			switch (name) {
 				case "ready":
 					console.log("Sending init");
 					await postData("init", new Uint8Array(await vscode.workspace.fs.readFile(document.uri)));
+					outLog(`Project data sent`);
+					break;
+				case "log":
+					handleLogMsg(data.type, data.content);
 					break;
 			}
 		});
