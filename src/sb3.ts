@@ -152,8 +152,12 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
         </html>
 		`;
 
-		function handleLogMsg(type: string, content: any) {
-			outLog(`${type}: ${content}`);
+		function handleLogMsg(type: string, content: string) {
+			if (content !== '') {
+				content = `: ${content}`;
+			}
+
+			outLog(`${type}${content}`);
 		}
 
 		// Wait for the webview to be properly ready before we init
@@ -169,7 +173,11 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 					outLog(`Project data sent`);
 					break;
 				case "log":
-					handleLogMsg(data.type, data.content);
+					if (data.content === undefined) {
+						data.content = '';
+					}
+
+					handleLogMsg(data.type, data.content.toString());
 					break;
 			}
 		});

@@ -35,6 +35,23 @@ scaffolding.appendTo(project);
 const vm = scaffolding.vm;
 const runtime = vm.runtime;
 
+let done = false;
+
+function exit(exitCode) {
+    // 1 = error
+    // 0 = fine
+    // 130 = keyboard interrupt
+    if (done) {
+        // If we already started the exit process, don't start queueing another
+        return;
+    }
+
+    done = true;
+    postLog("exit_code", exitCode.toString());
+
+    scaffolding.stopAll();
+}
+
 console.log("ready almost");
 
 async function init(data) {
@@ -44,11 +61,12 @@ async function init(data) {
     scaffolding.relayout();
 
     greenFlag.onclick = async (e) => {
+        postLog("\ngreenflag");
         scaffolding.greenFlag();
     };
 
     stop.onclick = async (e) => {
-        scaffolding.stopAll();
+        exit(130);
     };
 }
 
@@ -83,11 +101,23 @@ function registerLogProc(name, procCodeArgs = '', callback = undefined) {
     });
 }
 
+
 registerLogProc('log', ' %s');
 registerLogProc('warn', ' %s');
 registerLogProc('error', ' %s');
 registerLogProc('breakpoint', '', (content, util) => {
-    console.log("oh no, breakkkk");
+    console.log("BREAKPOINT (SB3)");
+    exit(1);
+});
+
+runtime.addListener('SAY', (target, type, msg) => {
+    if (msg !== '') {
+        postLog(type, msg);
+    }
+});
+
+runtime.addListener('PROJECT_RUN_STOP', () => {
+    exit(0);
 });
 
 console.log("slatch ready");
