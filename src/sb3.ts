@@ -130,7 +130,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 
 				scaffolding.width = 480;
 				scaffolding.height = 360;
-				scaffolding.resizeMode = 'preserve-ratio'; // or 'dynamic-resize' or 'stretch'
+				scaffolding.resizeMode = 'preserve-ratio'; // or 'dynamic-resize' or 'stretch' or 'preserve-ratio'
 				scaffolding.editableLists = false;
 				scaffolding.shouldConnectPeripherals = true;
 				scaffolding.usePackagedRuntime = false;
@@ -153,6 +153,10 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 
 					greenFlag.onclick = async (e) => {
 						scaffolding.greenFlag();
+					}
+
+					stop.onclick = async (e) => {
+						scaffolding.stopAll();
 					}
 				}
 
