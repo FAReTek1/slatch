@@ -1,3 +1,8 @@
+html,body {
+    height: 100%;
+    min-height: 100%;
+}
+
 /* from https://turbowarp.org/ */
 
 .green-flag {
@@ -19,7 +24,8 @@
 div.controls {
     display: flex;
 }
-#project {
-    width: 480px;
-    height: 360px;
+
+#project-container {
+    width: 100%;
+    height: 100%;
 }

@@ -85,7 +85,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 		};
 
 		async function postData(name: string, data: any) {
-			return await webview.postMessage({name, data});
+			return await webview.postMessage({ name, data });
 		}
 
 		webview.html = /*html*/`<h1>Loading</h1>`;
@@ -110,13 +110,33 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 			<head>
 				<link href="${styleMainUri}" rel="stylesheet" />
 			</head>
-        	<h6>Project runner</h6>
-			<div class="controls">
-        		<img src="${greenFlagUri}" class="green-flag" title="Go">
-        		<img src="${stopUri}" class="stop" title="Stop">
+			<div id=project-container>
+				<div class="controls">
+        			<img src="${greenFlagUri}" class="green-flag" title="Go">
+        			<img src="${stopUri}" class="stop" title="Stop">
+				</div>
+				<div id="project"></div>
 			</div>
-			<div id="project"></div>
+			<script>
+    			const project = document.querySelector("#project");
+    			const container = document.querySelector("#project-container");
 
+    			let width = 480;
+    			let height = 360;
+
+    			const maxWidth = container.clientWidth;
+    			const maxHeight = container.clientHeight;
+
+				const wRatio = maxWidth / width;
+				const hRatio = maxHeight / height;
+
+				const scaleAmt = Math.min(wRatio, hRatio);
+				width *= scaleAmt;
+				height *= scaleAmt;
+
+				project.style.width = width + "px";
+				project.style.height = height + "px";
+			</script>
 			<script src="${scaffoldingUri}"></script>
 			<script>
 				console.log("Setting up scaffolding");
@@ -137,7 +157,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 
 				console.log("Setup scaffolding")
 
-				const project = document.getElementById('project');
+				// const project = document.getElementById('project');
 				const greenFlag = document.querySelector('.green-flag');
 				const stop = document.querySelector('.stop');
 			
@@ -172,7 +192,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 					}
 				});
 				console.log("slatch ready");
-				vscode.postMessage("ready");
+				vscode.postMessage("ready");  // this is used by the extension to know when to send the project binary data
 			</script>
         </html>
 		`;
