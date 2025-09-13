@@ -125,7 +125,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
     			let height = 360;
 
     			const maxWidth = container.clientWidth;
-    			const maxHeight = container.clientHeight;
+    			const maxHeight = container.clientHeight - 50; // add buffer for controls
 
 				const wRatio = maxWidth / width;
 				const hRatio = maxHeight / height;
@@ -170,6 +170,7 @@ export class Provider implements vscode.CustomReadonlyEditorProvider {
 					console.log("got init");
 					await scaffolding.loadProject(data);
 					console.log("inited");
+					scaffolding.relayout();
 
 					greenFlag.onclick = async (e) => {
 						scaffolding.greenFlag();
